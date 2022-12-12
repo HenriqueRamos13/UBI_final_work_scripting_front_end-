@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API_URL from "../../utils/API_URL";
 import defaultHeaders from "../../utils/defaultHeaders";
 import { Role, RoleRoute } from "../../utils/RoleAndRoute";
@@ -29,9 +29,8 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
   async function signIn({ email, password }: SignInCredentials) {
     const response = await fetch(API_URL + "/session", {
@@ -52,7 +51,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (data.token) {
       setUser(data.user);
       setIsAuthenticated(true);
-      navigate(RoleRoute(data.user.role));
     }
   }
 
@@ -61,8 +59,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       ...defaultHeaders,
       method: "DELETE",
     });
-    setUser(null);
+
     setIsAuthenticated(false);
+    setUser(null);
     navigate(pathname);
   }
 
@@ -75,13 +74,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const data = await response.json();
 
     if (!data.isAuth) {
-      return signOut();
+      return await signOut();
     }
 
-    setUser(data.user);
     setIsAuthenticated(true);
-    navigate(RoleRoute(data.user.role));
+    setUser(data.user);
   }
+
+  useEffect(() => {
+    if (user) {
+      navigate(RoleRoute(user.role));
+    }
+  }, [user]);
 
   useEffect(() => {
     verifyIfUserIsAuthenticated();

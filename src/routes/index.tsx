@@ -1,34 +1,33 @@
 import { Routes, Route } from "react-router-dom";
+import NavBar from "../components/NavBar";
 
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import UserPage from "../pages/User";
 import { Role } from "../utils/RoleAndRoute";
 import { PrivateRoute } from "./PrivateRoute";
-import { PublicRoute } from "./PublicRoute";
 
 export const RouteList = () => (
   <Routes>
-    <Route
-      path="/"
-      element={
-        <PublicRoute>
-          <Login />
-        </PublicRoute>
-      }
-    />
+    <Route path="/" element={<Login />} />
 
-    <Route
-      path="/login"
-      element={
-        <PublicRoute>
-          <Login />
-        </PublicRoute>
-      }
-    />
+    <Route path="/login" element={<Login />} />
 
     <Route path="/register" element={<Register />} />
 
     {/* PRIVATES */}
+
+    <Route
+      path="/user"
+      element={
+        <PrivateRoute roles={[Role.USER]}>
+          <>
+            <NavBar />
+            <UserPage />
+          </>
+        </PrivateRoute>
+      }
+    />
 
     {/* <Route
       path="/admin"

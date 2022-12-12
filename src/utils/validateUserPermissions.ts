@@ -18,7 +18,7 @@ export function validateUserPermissions({
   if (roles?.length) {
     const userRole = user?.role || null;
 
-    hasAllRoles = roles.some((role) => role === userRole);
+    hasAllRoles = roles.includes(userRole);
   }
 
   return { hasAllRoles };
