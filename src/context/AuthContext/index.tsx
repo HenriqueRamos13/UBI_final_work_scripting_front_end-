@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import API_URL from "../../utils/API_URL";
+import defaultHeaders from "../../utils/defaultHeaders";
 import { Role, RoleRoute } from "../../utils/RoleAndRoute";
 
 interface SignInCredentials {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function signIn({ email, password }: SignInCredentials) {
     const response = await fetch(API_URL + "/session", {
       method: "POST",
+      ...defaultHeaders,
       headers: {
         "Content-Type": "application/json",
       },
@@ -56,6 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signOut(pathname = "/login") {
     await fetch(API_URL + "/session", {
+      ...defaultHeaders,
       method: "DELETE",
     });
     setUser(null);
@@ -63,12 +66,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     navigate(pathname);
   }
 
-  useEffect(() => {
-    if (!user || !isAuthenticated) signOut(pathname);
-  }, [pathname]);
-
   async function verifyIfUserIsAuthenticated() {
     const response = await fetch(API_URL + "/session", {
+      ...defaultHeaders,
       method: "GET",
     });
 
