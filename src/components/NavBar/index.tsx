@@ -1,39 +1,83 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { Role, RoleRoute } from "../../utils/RoleAndRoute";
+
+interface Menu {
+  label: string;
+  href: string;
+  onClick?: () => void;
+}
+
 export default function NavBar() {
+  const { signOut, user } = useContext(AuthContext);
+
+  const defaultMenus: Menu[] = [
+    {
+      label: "Log Out",
+      href: "",
+      onClick: signOut,
+    },
+  ];
+
+  const MENUS = {
+    USER: [
+      {
+        label: "Home",
+        href: RoleRoute(Role.USER),
+      },
+      {
+        label: "Courses",
+        href: "/courses",
+      },
+      {
+        label: "My Courses",
+        href: "/my-courses",
+      },
+      ...defaultMenus,
+    ],
+    TEACHER: [
+      {
+        label: "Home",
+        href: RoleRoute(Role.TEACHER),
+      },
+      {
+        label: "Criar",
+        href: "/create-course",
+      },
+      {
+        label: "My Courses",
+        href: "/courses-created",
+      },
+      ...defaultMenus,
+    ],
+    ADMIN: [
+      {
+        label: "Home",
+        href: RoleRoute(Role.ADMIN),
+      },
+      ...defaultMenus,
+    ],
+  };
+
   return (
-    <div className="navbar bg-base-100">
+    <div className="navbar bg-base-100 dark:bg-base-300 flex flex-wrap justify-between shadow-lg">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <a className="btn btn-ghost normal-case text-xl">Language School</a>
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          <li>
-            <a>Item 1</a>
-          </li>
-          <li tabIndex={0}>
-            <a>
-              Parent
-              <svg
-                className="fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-              >
-                <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
-              </svg>
-            </a>
-            <ul className="p-2 bg-base-100">
+          {MENUS[user!.role!].map((menu) => {
+            return (
               <li>
-                <a>Submenu 1</a>
+                {menu.onClick ? (
+                  <a onClick={signOut}>Logout</a>
+                ) : (
+                  <Link to={menu.href}>{menu.label}</Link>
+                )}
               </li>
-              <li>
-                <a>Submenu 2</a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a>Item 3</a>
-          </li>
+            );
+          })}
         </ul>
       </div>
     </div>
