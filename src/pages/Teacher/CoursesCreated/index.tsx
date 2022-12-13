@@ -22,9 +22,9 @@ export default function CoursesCreated() {
   return (
     <div className="p-4">
       <Title>Your courses</Title>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row gap-8 flex-wrap items-center justify-between">
         {courses.map((course) => (
-          <Card key={course._id} {...course} subcribed />
+          <Card key={course._id} {...course} subcribed canDelete={getCourses} />
         ))}
       </div>
     </div>

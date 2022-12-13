@@ -74,7 +74,7 @@ export default function CoursePage() {
         </>
       )}
       <Title>Topics</Title>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row flex-wrap gap-8 items-center justify-between">
         {course &&
           course.topics.map((topic, index) => (
             <div

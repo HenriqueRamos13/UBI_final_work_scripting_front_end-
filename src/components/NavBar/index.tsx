@@ -42,7 +42,7 @@ export default function NavBar() {
         href: RoleRoute(Role.TEACHER),
       },
       {
-        label: "Criar",
+        label: "Create Course",
         href: "/create-course",
       },
       {
@@ -55,6 +55,18 @@ export default function NavBar() {
       {
         label: "Home",
         href: RoleRoute(Role.ADMIN),
+      },
+      {
+        label: "Users",
+        href: "/users",
+      },
+      {
+        label: "Teachers",
+        href: "/teachers",
+      },
+      {
+        label: "Create Teacher",
+        href: "/create-teacher",
       },
       ...defaultMenus,
     ],

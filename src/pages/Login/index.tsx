@@ -1,19 +1,23 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
   const { signIn } = useContext(AuthContext);
 
-  function handleSubmit(event: any) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
 
-    signIn({
+    setLoading(true);
+
+    await signIn({
       email: data.get("email") as string,
       password: data.get("password") as string,
     });
+    setLoading(false);
   }
 
   return (
@@ -50,7 +54,11 @@ export default function Login() {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <button className="btn btn-primary" type="submit">
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={loading}
+                >
                   Login
                 </button>
               </div>

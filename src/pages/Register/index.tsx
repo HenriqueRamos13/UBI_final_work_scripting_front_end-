@@ -1,13 +1,14 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import API_URL from "../../utils/API_URL";
 import defaultHeaders from "../../utils/defaultHeaders";
 
 export default function Register() {
+  const [loading, setLoading] = useState(false);
   const { signIn } = useContext(AuthContext);
 
-  function handleSubmit(event: any) {
+  async function handleSubmit(event: any) {
     event.preventDefault();
 
     const data = new FormData(event.currentTarget);
@@ -17,7 +18,9 @@ export default function Register() {
       password: data.get("password") as string,
     };
 
-    fetch(API_URL + "/auth", {
+    setLoading(true);
+
+    await fetch(API_URL + "/auth", {
       method: "POST",
       ...defaultHeaders,
       headers: {
@@ -27,6 +30,7 @@ export default function Register() {
     })
       .then((response) => {
         response.json().then((data) => {
+          setLoading(false);
           if (data.error) {
             return alert(data.error);
           }
@@ -37,6 +41,7 @@ export default function Register() {
         });
       })
       .catch((error) => {
+        setLoading(false);
         alert("Ocorreu um erro inesperado, tente novamente mais tarde!");
       });
   }
@@ -75,7 +80,11 @@ export default function Register() {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <button className="btn btn-primary" type="submit">
+                <button
+                  className="btn btn-primary"
+                  type="submit"
+                  disabled={loading}
+                >
                   Registrar
                 </button>
               </div>

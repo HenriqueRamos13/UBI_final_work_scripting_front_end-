@@ -7,6 +7,7 @@ export interface Topic {
 }
 
 export interface Course {
+  teacher: string;
   name: string;
   description: string;
   topics: Topic[];
@@ -15,9 +16,16 @@ export interface Course {
 
 interface CardProps extends Course {
   subcribed?: boolean;
+  canDelete?: () => void;
 }
 
-export default function Card({ name, description, _id, subcribed }: CardProps) {
+export default function Card({
+  name,
+  description,
+  _id,
+  subcribed,
+  canDelete,
+}: CardProps) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -38,19 +46,53 @@ export default function Card({ name, description, _id, subcribed }: CardProps) {
     navigate("/course/" + _id);
   }
 
+  async function handleDelete() {
+    setLoading(true);
+    const response = await fetch(`http://localhost:3333/course/${_id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    setLoading(false);
+
+    const { data, error } = await response.json();
+
+    if (error) {
+      alert(error);
+    }
+
+    alert("Course deleted successfully!");
+
+    canDelete && canDelete();
+  }
+
   return (
     <div className="card w-96 bg-base-200 shadow-xl">
       <div className="card-body">
         <h2 className="card-title">{name}</h2>
         <p>{description}</p>
-        <div className="card-actions justify-end">
-          <button
-            className="btn btn-primary"
-            onClick={subcribed ? () => navigate("/course/" + _id) : subscribe}
-            disabled={loading}
-          >
-            {subcribed ? "View" : "Subscribe"}
-          </button>
+        <div className="w-full flex items-center justify-between">
+          {canDelete ? (
+            <div className="card-actions justify-start">
+              <button
+                className="btn btn-error"
+                onClick={handleDelete}
+                disabled={loading}
+              >
+                Delete
+              </button>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <div className="card-actions justify-end">
+            <button
+              className="btn btn-primary"
+              onClick={subcribed ? () => navigate("/course/" + _id) : subscribe}
+              disabled={loading}
+            >
+              {subcribed ? "View" : "Subscribe"}
+            </button>
+          </div>
         </div>
       </div>
     </div>

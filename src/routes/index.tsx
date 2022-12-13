@@ -11,6 +11,10 @@ import { PrivateRoute } from "./PrivateRoute";
 import TeacherPage from "../pages/Teacher";
 import CreateCourse from "../pages/Teacher/Create";
 import CoursesCreated from "../pages/Teacher/CoursesCreated";
+import AdminPage from "../pages/Admin";
+import Teachers from "../pages/Admin/Professores";
+import Users from "../pages/Admin/Usuarios";
+import RegisterTeacher from "../pages/Admin/CreateTeacher";
 
 export const RouteList = () => (
   <Routes>
@@ -77,6 +81,54 @@ export const RouteList = () => (
           <>
             <NavBar />
             <TeacherPage />
+          </>
+        </PrivateRoute>
+      }
+    />
+
+    <Route
+      path="/admin"
+      element={
+        <PrivateRoute roles={[Role.ADMIN]}>
+          <>
+            <NavBar />
+            <AdminPage />
+          </>
+        </PrivateRoute>
+      }
+    />
+
+    <Route
+      path="/users"
+      element={
+        <PrivateRoute roles={[Role.ADMIN]}>
+          <>
+            <NavBar />
+            <Users />
+          </>
+        </PrivateRoute>
+      }
+    />
+
+    <Route
+      path="/teachers"
+      element={
+        <PrivateRoute roles={[Role.ADMIN]}>
+          <>
+            <NavBar />
+            <Teachers />
+          </>
+        </PrivateRoute>
+      }
+    />
+
+    <Route
+      path="/create-teacher"
+      element={
+        <PrivateRoute roles={[Role.ADMIN]}>
+          <>
+            <NavBar />
+            <RegisterTeacher />
           </>
         </PrivateRoute>
       }

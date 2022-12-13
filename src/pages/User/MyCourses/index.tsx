@@ -12,7 +12,10 @@ export default function MyCourses() {
       ...defaultHeaders,
     });
     const { data } = await response.json();
-    setCourses(data.map(({ course }: { course: Course }) => course));
+
+    const courses = data.filter(({ course }: { course: Course }) => course);
+
+    setCourses(courses.map(({ course }: { course: Course }) => course));
   }
 
   useEffect(() => {
@@ -22,7 +25,7 @@ export default function MyCourses() {
   return (
     <div className="p-4">
       <Title>Your courses</Title>
-      <div className="flex flex-row items-center justify-between">
+      <div className="flex flex-row flex-wrap gap-8 items-center justify-between">
         {courses.map((course) => (
           <Card key={course._id} {...course} subcribed />
         ))}
