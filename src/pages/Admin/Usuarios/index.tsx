@@ -16,7 +16,7 @@ export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [courses, setCourses] = useState([]);
 
-  async function getCoursesHasUsers(id: string) {
+  async function getCoursesHasUsers() {
     const response = await fetch(API_URL + "/course/all/user/all", {
       ...defaultHeaders,
     });
